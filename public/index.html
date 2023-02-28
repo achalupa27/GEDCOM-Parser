@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Genealogy App</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="CHANGE ME">
+    <meta name="keywords" content="CHANGE ME">
+    <meta name="author" content="CHANGE ME">
+    <!-- Load jquery, bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="/style.css">
+    <!-- Custom CSS End -->
+</head>
+<body>
+	<h4>Status Panel</h4>
+	<div id = "status_panel" style="overflow-y:auto; line-height: 2; height:9em;">
+		<p id="status"></p>
+	</div>
+	<hr>
+
+	<h4>File Log Panel</h4>
+	<div id = "file_log_panel" style="text-align:left;">
+		<input id="upload" type="file" multiple onchange="changeStatus('upload')"/>
+		<a href="" id="upload_link">Upload .ged file</a>
+		<table style="width:100%; table-layout:fixed;" border="1">
+			<tr>
+				<th>File name (click to download)</th>
+				<th>Source</th>
+				<th>GEDC version</th>
+				<th>Encoding</th>
+				<th>Submitter Name</th>
+				<th>Submitter Address</th>
+				<th>Number of Individuals</th>
+				<th>Number of Families</th>
+			</tr>
+		</table>
+		<div id="gedcom_objects" style="width:100%; height:6em; overflow-x:auto">
+			<table id="objects" style="width:100%; table-layout:fixed" border="1">
+				<tr id="template">
+					<td><div class=scrollable> <a href="" onclick="changeStatus('status');return false;">shakespeare.ged<br></a></div></td>
+					<td><div class=scrollable>webtreeprint.com</div></td>
+					<td><div class=scrollable>5.5</div></td>
+					<td><div class=scrollable>UTF-8</div></td>
+					<td><div class=scrollable>webTreePrint</div></td>
+					<td><div class=scrollable></div></td>
+					<td><div class=scrollable>31</div></td>
+					<td><div class=scrollable>11</div></td>
+				</tr>			
+
+			</table>
+		</div>
+	</div>
+	<hr>
+
+	<h4>GEDCOM View Panel</h4>
+	<div id = "gedcom_view_panel" style="text-align:left;">
+		<table style="width:100%; table-layout:fixed;">
+			<tr>
+				<th>Given Name</th>
+				<th>Surname</th>
+				<th>Sex</th>
+				<th>Family Size</th>
+			</tr>
+		</table>
+		<div style="overflow-x:auto; overflow-y:auto; height:8em;">
+			<table id="indivs" style="width:100%; table-layout:fixed;">
+				<tr>
+					<td><div class=scrollable>William</div></td>
+					<td><div class=scrollable>Shakespeare</div></td>
+					<td>M</td>
+					<td>5</td>
+				</tr>
+				<tr>
+					<td><div class=scrollable>Mary</div></td>
+					<td><div class=scrollable>Anne</div></td>
+					<td>F</td>
+					<td>5</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<hr>
+	<h4>Create Simple GEDCOM</h4>
+	<form id="create_gedcom">
+		File name: <input type="text" name="c_file"><br>
+		Source: <input type="text" name="c_src"><br>
+		Encoding: <input type="text" name="c_enc"><br>
+		Version: <input type="text" name="c_vers"><br>
+		Submitter Name: <input type="text" name="c_s_name"><br>
+		Submitter Address: <input type="text" name="c_s_addr"><br>
+	</form>
+	<button type="button" onclick="createGEDCOM()">Create GEDCOM</button>
+	<hr>
+	<h4>Add Individual</h4>
+	<div>
+		File:
+		<select id="add_ind_file">
+			<option value="nuclearFamily.ged">nuclearFamily.ged</option>
+			<option value="shakespeare.ged">shakespeare.ged</option>
+		</select>
+		<form id="create_individual">
+			First Name: <input type="text" name="f_name"><br>
+			Last Name: <input type="text" name="l_name"><br>
+			Sex: <input type="text" name="sex"><br>
+			Family Size: <input type="text" name="fam_size"><br>
+		</form>
+		<button type="button" onclick="addIndividual()">Add Individual</button>
+	</div>
+	<hr>
+	<h4>Get Descendants</h4>
+	<div>
+		File:
+		<select>
+			<option value="nuclearFamily">nuclearFamily.ged</option>
+			<option value="shakespeare">shakespeare.ged</option>
+		</select>
+		Individual: 
+		<select>
+			<option value="ind1">Dummy Ind 1</option>
+			<option value="ind1">Dummy Ind 2</option>
+		</select>
+		Max Gen: <input type="text" name="max_gen"><br>
+		<button type="button" onclick="getDescendants()">Get Descendants</button>
+	<div>
+	<div id="descendants">
+	</div>
+	<hr>
+	<h4>Get Ancestors</h4>
+	<div>
+		File:
+		<select>
+			<option value="nuclearFamily">nuclearFamily.ged</option>
+			<option value="shakespeare">shakespeare.ged</option>
+		</select> 
+		Individual: 
+		<select>
+			<option value="ind1">Dummy Ind 1</option>
+			<option value="ind1">Dummy Ind 2</option>
+		</select>
+		Max Gen: <input type="text" name="max_gen"><br>
+		<button type="button" onclick="getAncestors()">Get Ancestors</button>
+	</div>
+	<div id="ancestors">
+	</div>
+    <script src="/index.js"></script>
+</body>
+</html>
